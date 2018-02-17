@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Nerror</title>
+	<meta charset="utf-8" />
+	<style type="text/css">
+	* { margin: 0; }
+	textarea { position: relative; display: inline-block; overflow-x: hidden; overflow-y: auto; border: 0; resize: none; font-size: 16px; }
+	#o { position: relative; display: block; font-family: Consolas, monospace; font-size: 16px; white-space: pre; }
+	#d { position: relative; display: inline-block; max-width: 200px; vertical-align: top; font-family: Consolas, monospace; }
+	.gui { position: relative; display: block; }
+	code { color: #fff; background-color: #000; }
+	input { font-size: 16px; }
+	input[type="number"], input[type="text"] { max-width: 50px; }
+	table { position: relative; display: inline-block; border: 0; padding: 0; border-collapse: collapse; border-spacing: 0; }
+	thead { display: block; }
+	tr:nth-child(even) { background-color: #eee; }
+	th { text-align: left; }
+	th:first-child, td:first-child { width: 50px; }
+	th:nth-child(2), td:nth-child(2) { width: 70px; }
+	th:nth-child(3), td:nth-child(3) { width: 180px; }
+	th:last-child, td:last-child { width: 70px; }
+	tbody { display: block; height: 590px; overflow-y: scroll; }
+	td:nth-child(2), td:last-child { font-family: Consolas, monospace; }
+	</style>
+</head>
+<body>
+	<textarea id="c" cols="128" rows="32" placeholder="Type 'EXIT' in the prompt to force quit the program."></textarea>
+	<table>
+		<thead><tr><th>ID</th><th>CMD</th><th>Description</th><th>Usage</th></tr></thead>
+		<tbody>
+			<tr><td>32</td><td>space</td><td>No operation</td><td>&nbsp;</td></tr>
+			<tr><td>33</td><td>!</td><td>Logical NOT</td><td>X!</td></tr>
+			<tr><td>34</td><td>"</td><td>String mode</td><td>3"str</td></tr>
+			<tr><td>35</td><td>#</td><td>Skip next command</td><td>#</td></tr>
+			<tr><td>36</td><td>$</td><td>Copy args[2]</td><td>X$</td></tr>
+			<tr><td>37</td><td>%</td><td>Modulus</td><td>XY%</td></tr>
+			<tr><td>38</td><td>&amp;</td><td>Binary AND</td><td>XY&amp;</td></tr>
+			<tr><td>39</td><td>'</td><td>Integer mode</td><td>4'30cf</td></tr>
+			<tr><td>40</td><td>(</td><td>If&rarr;Skip</td><td>X(</td></tr>
+			<tr><td>41</td><td>)</td><td>Unless&rarr;Skip</td><td>X)</td></tr>
+			<tr><td>42</td><td>*</td><td>Multiply</td><td>XY*</td></tr>
+			<tr><td>43</td><td>+</td><td>Add</td><td>XY+</td></tr>
+			<tr><td>44</td><td>,</td><td>args[0]&rarr;args[1]</td><td>,</td></tr>
+			<tr><td>45</td><td>-</td><td>Subtract</td><td>XY-</td></tr>
+			<tr><td>46</td><td>.</td><td>Fill args with null</td><td>.</td></tr>
+			<tr><td>47</td><td>/</td><td>Divide (floored)</td><td>XY/</td></tr>
+			<tr><td>48-57</td><td>0 - 9</td><td>Number literals</td><td>0</td></tr>
+			<tr><td>58</td><td>:</td><td>Shift null args to left</td><td>:</td></tr>
+			<tr><td>59</td><td>;</td><td>Shift null args to right</td><td>;</td></tr>
+			<tr><td>60</td><td>&lt;</td><td>Less than</td><td>XY&lt;</td></tr>
+			<tr><td>61</td><td>=</td><td>Equals to</td><td>XY=</td></tr>
+			<tr><td>62</td><td>&gt;</td><td>Greater than</td><td>XY&gt;</td></tr>
+			<tr><td>63</td><td>?</td><td>Ternary operator</td><td>XYZ?</td></tr>
+			<tr><td>64</td><td>@</td><td>If&rarr;Restart</td><td>X@</td></tr>
+			<tr><td>65</td><td>A</td><td>Increment</td><td>XA</td></tr>
+			<tr><td>66</td><td>B</td><td></td><td></td></tr>
+			<tr><td>67</td><td>C</td><td>Clear output</td><td>C</td></tr>
+			<tr><td>68</td><td>D</td><td>Decrement</td><td>XD</td></tr>
+			<tr><td>69</td><td>E</td><td>Exit program</td><td>E</td></tr>
+			<tr><td>70</td><td>F</td><td></td><td></td></tr>
+			<tr><td>71</td><td>G</td><td>ARR Get/Set</td><td>XG, XYG</td></tr>
+			<tr><td>72</td><td>H</td><td></td><td></td></tr>
+			<tr><td>73</td><td>I</td><td>Input character</td><td>I</td></tr>
+			<tr><td>74</td><td>J</td><td></td><td></td></tr>
+			<tr><td>75</td><td>K</td><td></td><td></td></tr>
+			<tr><td>76</td><td>L</td><td>ARR length</td><td>L</td></tr>
+			<tr><td>77</td><td>M</td><td></td><td></td></tr>
+			<tr><td>78</td><td>N</td><td></td><td></td></tr>
+			<tr><td>79</td><td>O</td><td>Output character</td><td>XO</td></tr>
+			<tr><td>80</td><td>P</td><td>ARR Pop/Push</td><td>P, XP</td></tr>
+			<tr><td>81</td><td>Q</td><td></td><td></td></tr>
+			<tr><td>82</td><td>R</td><td>Absolute reverse</td><td>XR</td></tr>
+			<tr><td>83</td><td>S</td><td>ARR Shift/Unshift</td><td>S, XS</td></tr>
+			<tr><td>84</td><td>T</td><td></td><td></td></tr>
+			<tr><td>85</td><td>U</td><td></td><td></td></tr>
+			<tr><td>86</td><td>V</td><td></td><td></td></tr>
+			<tr><td>87</td><td>W</td><td>Wait x milliseconds</td><td>XW</td></tr>
+			<tr><td>88</td><td>X</td><td>Get x</td><td>X</td></tr>
+			<tr><td>89</td><td>Y</td><td>Get y</td><td>Y</td></tr>
+			<tr><td>90</td><td>Z</td><td>Get z</td><td>Z</td></tr>
+			<tr><td>91</td><td>[</td><td>Forward jump</td><td>X[</td></tr>
+			<tr><td>92</td><td>\</td><td>Swap args[1] args[2]</td><td>\</td></tr>
+			<tr><td>93</td><td>]</td><td>Backward jump</td><td>X]</td></tr>
+			<tr><td>94</td><td>^</td><td>Binary XOR</td><td>XY^</td></tr>
+			<tr><td>95</td><td>_</td><td>Random integer</td><td>_, XY_</td></tr>
+			<tr><td>96</td><td>`</td><td>Exponent</td><td>XY`</td></tr>
+			<tr><td>97-102</td><td>a - f</td><td>Hexadecimal literals</td><td>a</td></tr>
+			<tr><td>103</td><td>g</td><td>arr Get/Set</td><td>Xg, XYg</td></tr>
+			<tr><td>104</td><td>h</td><td></td><td></td></tr>
+			<tr><td>105</td><td>i</td><td>Input integer</td><td>i</td></tr>
+			<tr><td>106</td><td>j</td><td></td><td></td></tr>
+			<tr><td>107</td><td>k</td><td></td><td></td></tr>
+			<tr><td>108</td><td>l</td><td>arr Length</td><td>l</td></tr>
+			<tr><td>109</td><td>m</td><td></td><td></td></tr>
+			<tr><td>110</td><td>n</td><td></td><td></td></tr>
+			<tr><td>111</td><td>o</td><td>Output integer</td><td>o</td></tr>
+			<tr><td>112</td><td>p</td><td>arr Pop/Push</td><td>p, Xp</td></tr>
+			<tr><td>113</td><td>q</td><td></td><td></td></tr>
+			<tr><td>114</td><td>r</td><td>Relative reverse</td><td>Xr</td></tr>
+			<tr><td>115</td><td>s</td><td>arr Shift/Unshift</td><td>s, Xs</td></tr>
+			<tr><td>116</td><td>t</td><td></td><td></td></tr>
+			<tr><td>117</td><td>u</td><td></td><td></td></tr>
+			<tr><td>118</td><td>v</td><td></td><td></td></tr>
+			<tr><td>119</td><td>w</td><td></td><td></td></tr>
+			<tr><td>120</td><td>x</td><td>Set x</td><td>Xx</td></tr>
+			<tr><td>121</td><td>y</td><td>Set y</td><td>Xy</td></tr>
+			<tr><td>122</td><td>z</td><td>Set z</td><td>Xz</td></tr>
+			<tr><td>123</td><td>{</td><td>Binary left shift</td><td>XY{</td></tr>
+			<tr><td>124</td><td>|</td><td>Binary OR</td><td>XY|</td></tr>
+			<tr><td>125</td><td>}</td><td>Binary right shift</td><td>XY}</td></tr>
+			<tr><td>126</td><td>~</td><td>Binary NOT</td><td>X~</td></tr>
+		</tbody>
+	</table>
+	<div id="d">Status:<br />index: -1<br />command:<br />direction: 1<br />mode: 0<br />x: 0<br />y: 0<br />z: 0<br />args: []<br />ARR: []<br />arr: []</div>
+	<div class="gui">
+		Speed:<select id="speed" autocomplete="off">
+			<option value="4">250Hz</option>
+			<option value="10">100Hz</option>
+			<option value="25">40Hz</option>
+			<option value="50">20Hz</option>
+			<option value="125">8Hz</option>
+			<option value="250">4Hz</option>
+			<option value="500">2Hz</option>
+			<option value="1000">1Hz</option>
+		</select>
+		<input type="button" id="runBtn" value="Run" />
+		<input type="button" id="stepBtn" value="Step" />
+		<input type="button" id="resetBtn" value="Reset" />
+		<input type="button" id="randBtn" value="Random" />
+		<select id="sample">
+			<option value="0">Hello world</option>
+			<option value="1">Cat</option>
+			<option value="2">If statement</option>
+			<option value="3">Fizzbuzz</option>
+			<option value="4">Fibonacci</option>
+			<option value="5">99 Bottles of beer</option>
+		</select>
+		<input type="button" id="loadBtn" value="Load" />
+	</div>
+	<div id="o">Nerror: A<s>n esoteric,</s> turing-complete programming language that <code>N</code>ever <code>ERROR</code>s.
+How it works:
+- Each character is either a function or a hexadecimal literal <code>0123456789abcdef</code>.
+- Each time a function is called, it will get up to 3 arguments from results of previous function calls and return a result or <code>null</code>.
+- You have three variables (x, y, z) and two data arrays (ARR and arr) to work with.
+- Currently there is no way to add comments, but you can use forward jumps to skip characters, e.g. <code>f3+[This is a comment.</code>
+- Only 3 data types are supported: null, signed 32 bit integer, and string.
+- The only way to get a string is with the string builder ("), e.g. <code>d"Hello, world!</code>
+- Since it's impossible to have errors in Nerror, any random string of characters is a valid program.
+- If there is an error, please report the bug to me. Thanks!
+The programming language is still in alpha development. <code>Expect bugs.</code> Many commands will be added and some might be changed.
+Nerror v0.2 Copyright &copy; <a href="https://github.com/CharCoding/" alt="GitHub">CharCoding</a> 2018, Some Rights Reserved.
+Have fun coding!</div>
+	<script type="text/javascript">'use strict';
+	/* chars: \u0000\u0001\u0002\u0003\u0004\u0005\u0006\u0007\u0008	
+\u000b\u000c
+\u000e\u000f\u0010\u0011\u0012\u0013\u0014\u0015\u0016\u0017\u0018\u0019\u001a\u001b\u001c\u001d\u001e\u001f !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~\u007f\u0080\u0081\u0082\u0083\u0084\u0085\u0086\u0087\u0088\u0089\u008a\u008b\u008c\u008d\u008e\u008f\u0090\u0091\u0092\u0093\u0094\u0095\u0096\u0097\u0098\u0099\u009a\u009b\u009c\u009d\u009e\u009f ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ  */
+	const args = [null, null, null], ARR = [], arr = [], fn = {
+		' ': null, // NOP
+		'!': x => +!x, // NOT
+		'"': x => x > 0 && (mode = 1),
+		'#': () => {index += direction; return null;}, // SKIP
+		'$': x => args[1] = x, // DUP
+		'%': (x, y) => x % y, // MOD
+		'&': (x, y) => x & y, // AND
+		'\'': x => x > 0 && (mode = 2),
+		'(': x => x && (index += direction, null), // IF
+		')': x => x || (index += direction, null), // IFN
+		'*': (x, y) => x * y | 0, // MUL
+		'+': (x, y) => x + y | 0, // ADD
+		',': (x, y, z) => args[1] = x,
+		'-': (x, y) => x - y | 0, // SUB
+		'.': () => args.fill(null),
+		'/': (x, y) => x / y | 0, // DIV
+		//': Numbers 0-9
+		':': shiftArgs,
+		';': shiftArgs.bind(true),
+		'<': (x, y) => +(x < y), // LT
+		'=': (x, y) => +(x == y), // EQ
+		'>': (x, y) => +(x > y), // GT
+		'?': (x, y, z) => x ? y : z, // TER
+		'@': x => {if(x) index = -1; return null;}, // RESTART
+		'A': x => (x + 1) | 0, // INC
+		'C': () => o.innerText = '',
+		'E': () => false,
+		'D': x => (x - 1) | 0, // DEC
+		'G': (x, y) => {if(x !== null) { ARR[x] = y; return null;} else return ARR[y];}, // GET/SET
+		'I': () => safePrompt("Please enter a character:").charCodeAt(0), // IN character
+		'L': () => ARR.length, // LEN
+		'O': x => {if(typeof x == 'string') o.innerText += x; else o.innerText += String.fromCharCode(x); return null;}, // OUT character
+		'P': x => {if(x !== null) { ARR.push(x); return null;} else return ARR.pop();}, // PUSH/POP
+		'R': x => direction = x ? 1 : -1, // absolute reverse direction
+		'S': x => {if(x !== null) { ARR.unshift(x); return null;} else return ARR.shift();}, // SHIFT/UNSHIFT
+		'W': x => {timer = setTimeout(run, x); return false},
+		'X': () => _x, // get X
+		'Y': () => _y, // get Y
+		'Z': () => _z, // get Z
+		'[': x => {if(x) index += x; return null;}, // forward jump
+		'\\': (x, y) => {args[2] = y; return x;}, // SWAP
+		']': x => {if(x) index -= x; return null;}, // backward jump
+		'^': (x, y) => x ^ y, // XOR
+		'_': rand,
+		'`': (x, y) => x ** y | 0, // POW
+		'g': (x, y) => {if(x !== null) { arr[x] = y; return null;} else return arr[y];}, // get
+		'i': () => +safePrompt("Please enter a signed 32 bit integer:","int") | 0, // IN integer
+		'l': () => arr.length, // len
+		'o': x => {o.innerText += +x; return null;}, // OUT integer
+		'p': x => {if(x !== null) { arr.push(x); return null;} else return arr.pop();}, // push/pop
+		'r': x => direction *= x ? -1 : 1, // relative reverse direction
+		's': x => {if(x !== null) { arr.unshift(x); return null;} else return arr.shift();},
+		'x': x => {if(x !== null) _x = x; return null;}, // set X
+		'y': x => {if(x !== null) _y = x; return null;}, // set Y
+		'z': x => {if(x !== null) _z = x; return null;}, // set Z
+		'{': (x, y) => x << y, // SHL
+		'|': (x, y) => x | y, // OR
+		'}': (x, y) => x >> y, // SHR
+		'~': x => ~x, // BNOT
+	}, hex = '0123456789abcdef', noshift = ' _"\':;.,', // these characters do not update the args array.
+	samplePrograms = [
+		"d\"Hello, world!O",
+		"IO4]",
+		"f[ If statement: i!(1f*[b\"Input is 0!OEf\"Input is not 0!O",
+		"X1+x X3%0=y X5%0=2*Y|y Y9*[Xo1@     4\"fizzO1@4\"buzzO1@8\"fizzbuzzO1@",
+		"1x1yXodOYodOXY+xXodOXY+y52{]",
+		"b9*xXof1{\" bottles of beer on the wall, OXo77*\" bottles of beer.\nTake one down, pass it around, OX1-xXo15{\" bottles of beer on the wall...\nOX1<5*[2'93]da*\"No more bottles of beer on the wall, no more bottles of beer.\nGo to the store and buy some more, 99 bottles of beer on the wall...O"
+	]
+	let _x = 0, _y = 0, _z = 0, timer, index = -1, direction = 1, interval = 4,
+		mode = 0, stringBuilder = '', intBuilder = 0, debug = true;
+	// Mode: 0 - normal, 1 - integer mode, 2 - string mode, 3 - graphical mode
+	function run(){
+		if(step())
+			timer = setTimeout(run, interval);
+		else runBtn.value = 'Run';
+	}
+	function step(){
+		index += direction;
+		if(index >= c.value.length || index < 0)
+			return false;
+		const cmd = c.value[index];
+		let ret = null;
+		if(mode == 1 && args[2]--){
+			stringBuilder += cmd;
+			if(args[2] == 0){
+				args[2] = stringBuilder; // THIS MIGHT BE PROBLEMATIC
+				mode = 0;
+				stringBuilder = '';
+			}
+		} else if(mode == 2 && args[2]--){
+			intBuilder = intBuilder << 4 | parseInt(cmd, 16);
+			if(args[2] == 0){
+				args[2] = intBuilder;
+				mode = intBuilder = 0;
+			}
+		} else {
+			if(hex.indexOf(cmd) >= 0)
+				ret = parseInt(cmd, 16);
+			else if(fn[cmd]) {
+				const f = fn[cmd], l = f.length;
+				if(l)
+					ret = f.apply(null, args.slice(-l));
+				else
+					ret = f();
+				if(ret === false) return ret;
+				if(ret === undefined || isNaN(ret)) ret = null; // avoid undefined at all cost
+			}
+			if(noshift.indexOf(cmd) < 0) {
+				args.push(ret);
+				args.shift();
+			}
+		}
+		if(debug)
+			d.innerText = `Status:\nindex: ${index}\ncommand: ${cmd}\ndirection: ${direction}\nmode: ${mode}\nx: ${_x}\ny: ${_y}\nz: ${_z}\nargs: ${args}\nARR: ${ARR}\narr: ${arr}`;
+		return true;
+	}
+	function reset(){
+		_x = _y = _z = mode = ARR.length = arr.length = intBuilder = 0;
+		args[0] = args[1] = args[2] = null;
+		index = -1;
+		direction = 1;
+		stringBuilder = o.innerText = '';
+		randBtn.disabled = false;
+	}
+	speed.addEventListener('change', e => interval = +speed.value);
+	runBtn.addEventListener('click', e => {
+		if(runBtn.value == 'Run'){
+			if(index < 0 || index > c.value.length) reset();
+			timer = setTimeout(run, interval);
+			runBtn.value = 'Pause';
+		} else {
+			clearTimeout(timer);
+			timer = false;
+			runBtn.value = 'Run';
+			randBtn.disabled = true;
+		}
+	});
+	stepBtn.addEventListener('click', step);
+	resetBtn.addEventListener('click', reset);
+	randBtn.addEventListener('click', e => {
+		let str = '';
+		for(let i = 100; i--;)
+			str += String.fromCharCode(Math.random() * 95 + 32 | 0);
+		c.value = str;
+	});
+	loadBtn.addEventListener('click', e => {
+		c.value = samplePrograms[sample.value];
+		reset();
+	});
+	function safePrompt(str, type){
+		const val = prompt(str, type === 'int' ? 0 : '');
+		if(val === 'EXIT') index = -2; // force quit
+		if(val === '') return type === 'int' ? 0 : '\0';
+		return val;
+	}
+	function shiftArgs(dir){
+		for(let i = 3; i--;)
+			if(args[i] === null) args.splice(i, 1);
+		while(args.length < 3)
+			if(dir)
+				args.unshift(null);
+			else
+				args.push(null);
+	}
+	function rand(x, y){
+		if(x === null){
+			if(y === null)
+				return Math.random() * 4294967296 | 0;
+			else
+				return Math.random() * y | 0;
+		} else {
+			if(y === null)
+				return Math.random() * x | 0;
+			else
+				return Math.min(x, y) + Math.random() * Math.abs(y - x) | 0;
+		}
+	}
+	</script>
+</body>
+</html>
