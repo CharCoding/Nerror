@@ -230,7 +230,7 @@ Have fun coding!</div>
 	function run(){
 		if(step())
 			timer = setTimeout(run, interval);
-		else runBtn.value = 'Run';
+		else if(c.value[index] != 'W') runBtn.value = 'Run';
 	}
 	function step(){
 		index += direction;
